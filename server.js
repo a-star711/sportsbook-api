@@ -13,7 +13,7 @@ app.get('/matches', async (req, res) => {
     const apiKey = process.env.API_KEY; 
     const apiUrl = `https://sports.ultraplay.net/sportsxml?clientKey=${apiKey}&sportId=2357`;
 
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl); 
 
     if (!response.ok) {
       return res.status(response.status).json({
