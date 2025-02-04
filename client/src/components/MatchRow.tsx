@@ -19,7 +19,7 @@ const MatchRow = ({ match }: MatchRowProps) => {
       <div className="grid grid-cols-[minmax(0,1fr)_420px] max-xs:grid-cols-[minmax(0,1fr)_118px] items-center">
         <div className="flex items-center text-center sm:gap-2 xs:h-8 min-w-0 max-xs:flex-col max-xs:h-20 max-xs:justify-center max-xs:gap-1">
           <div className="flex flex-row gap-6 ml-6 items-center text-center max-xs:flex-col max-xs:gap-1">
-            <span className="text-base text-black font-semibold whitespace-nowrap mr-10">
+            <span className="text-base text-black font-semibold whitespace-nowrap mr-10 max-xs:mr-0">
               {formatDate(match.startDate)}
             </span>
             <span className="text-base font-medium text-primary max-xs:w-full max-xs:truncate max-xs:text-sm">

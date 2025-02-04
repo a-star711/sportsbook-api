@@ -42,9 +42,9 @@ const GameAccordion = ({
       <AccordionItem value={game}>
         <AccordionTrigger
           onClick={handleToggle}
-          className="text-lg font-bold text-white mt-0.5 bg-primary pl-2"
+          className="text-lg font-bold text-white mt-0.5 bg-primary pl-2 text-transform: uppercase"
         >
-          {game.toUpperCase()}
+          {game}
         </AccordionTrigger>
         <AccordionContent>
           <Accordion type="multiple" defaultValue={defaultAccordionValue}>
