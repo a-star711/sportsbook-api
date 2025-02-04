@@ -12,6 +12,7 @@ const MatchListView = () => {
 
   const groupedMatches = getTimeAwareGroupedMatches();
   const observerRef = useRef<HTMLDivElement>(null);
+  const setCache = useTournamentStore((state) => state.setCache);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -34,6 +35,10 @@ const MatchListView = () => {
       if (currentRef) observer.unobserve(currentRef);
     };
   }, [hasMore, loading, loadMoreMatches]);
+
+  useEffect(() => {
+    setCache(groupedMatches);
+  }, [groupedMatches, setCache]);
 
   return (
     <div className="space-y-2">

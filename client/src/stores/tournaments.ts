@@ -17,6 +17,7 @@ type TournamentState = {
   hasMoreTournaments: boolean;
   cacheKey: string | null;
   cachedResult: Record<string, { date: string; matches: Match[] }[]> | null;
+  setCache: (result: Record<string, { date: string; matches: Match[] }[]>) => void;
   fetchTournaments: () => Promise<void>;
   loadMoreMatches: () => void;
   loadMoreTournaments: () => void;
@@ -38,6 +39,13 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
   hasMoreTournaments: true,
   cacheKey: null,
   cachedResult: null,
+  setCache: (result) => {
+    const newCacheKey = JSON.stringify({
+      tournaments: get().tournaments.map(t => t.id),
+      displayedMatches: get().getDisplayedMatches().map(m => m.id),
+    });
+    set({ cacheKey: newCacheKey, cachedResult: result });
+  },
 
   fetchTournaments: async () => {
     set({ loading: true, error: null });
@@ -146,8 +154,6 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
   
       dateGroup.matches.push(match);
     });
-
-    set({ cacheKey: newCacheKey, cachedResult: grouped });
   
     return grouped;
   },
