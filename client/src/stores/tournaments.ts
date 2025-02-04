@@ -15,6 +15,8 @@ type TournamentState = {
   pageSize: number;
   hasMore: boolean;
   hasMoreTournaments: boolean;
+  cacheKey: string | null;
+  cachedResult: Record<string, { date: string; matches: Match[] }[]> | null;
   fetchTournaments: () => Promise<void>;
   loadMoreMatches: () => void;
   loadMoreTournaments: () => void;
@@ -22,6 +24,7 @@ type TournamentState = {
   getDisplayedTournaments: () => Event[];
   getGroupedTournaments: () => Record<string, Event[]>;
   getTimeAwareGroupedMatches: () => Record<string, { date: string; matches: Match[] }[]>;
+  
 };
 
 export const useTournamentStore = create<TournamentState>((set, get) => ({
@@ -33,6 +36,8 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
   pageSize: 20,
   hasMore: true,
   hasMoreTournaments: true,
+  cacheKey: null,
+  cachedResult: null,
 
   fetchTournaments: async () => {
     set({ loading: true, error: null });
@@ -100,47 +105,51 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
     }, {} as Record<string, Event[]>);
   },
 
-
   getTimeAwareGroupedMatches: () => {
+    const { tournaments, getDisplayedMatches, cacheKey: cachedKey, cachedResult } = get();
+    const displayedMatches = getDisplayedMatches();
+  
+    const newCacheKey = JSON.stringify({
+      tournaments: tournaments.map(t => t.id),
+      displayedMatches: displayedMatches.map(m => m.id),
+    });
 
-    const tournaments = get().tournaments;
-    const displayedMatches = get().getDisplayedMatches();
-
-    let lastResult: Record<string, { date: string; matches: Match[] }[]> = {};
-    let lastTournaments: Event[] | null = null;
-    let lastDisplayedMatches: Match[] | null = null;
-
-    if (tournaments !== lastTournaments || displayedMatches !== lastDisplayedMatches) {
-
-      const grouped: Record<string, { date: string; matches: Match[] }[]> = {};
-
-      displayedMatches.forEach((match) => {
-        const parentTournament = tournaments.find((tournament) =>
-          tournament.matches.some((m) => m.id === match.id)
-        );
-        const league = parentTournament?.leagueName || "Unknown League";
-
-        if (!grouped[league]) grouped[league] = [];
-
-        const matchDate = new Date(match.startDate);
-        const dateKey = getDateKey(matchDate);
-
-        let dateGroup = grouped[league].find((group) => group.date === dateKey);
-        if (!dateGroup) {
-          dateGroup = { date: dateKey, matches: [] };
-          grouped[league].push(dateGroup);
-        }
-
-        dateGroup.matches.push(match);
-      });
-
-      lastResult = grouped;
-      lastTournaments = tournaments;
-      lastDisplayedMatches = displayedMatches;
-      return grouped;
+    if (cachedKey === newCacheKey) {
+      return cachedResult!;
     }
+  
+    const grouped: Record<string, { date: string; matches: Match[] }[]> = {};
 
-    return lastResult;
+    const tournamentMap = new Map<string, Event>();
+    tournaments.forEach(tournament => {
+      tournament.matches.forEach(match => {
+        tournamentMap.set(match.id.toString(), tournament);
+      });
+    });
+  
+    displayedMatches.forEach((match) => {
+      const parentTournament = tournamentMap.get(match.id.toString());
+      const league = parentTournament?.leagueName || "Unknown League";
+  
+      if (!grouped[league]) {
+        grouped[league] = [];
+      }
+  
+      const matchDate = new Date(match.startDate);
+      const dateKey = getDateKey(matchDate);
+  
+      let dateGroup = grouped[league].find((group) => group.date === dateKey);
+      if (!dateGroup) {
+        dateGroup = { date: dateKey, matches: [] };
+        grouped[league].push(dateGroup);
+      }
+  
+      dateGroup.matches.push(match);
+    });
+
+    set({ cacheKey: newCacheKey, cachedResult: grouped });
+  
+    return grouped;
   },
 }));
 
