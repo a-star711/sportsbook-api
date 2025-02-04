@@ -12,18 +12,22 @@ export default {
     },
     extend: {
       borderRadius: {
-        lg: "12px", // Large radius
-        md: "10px", // Medium radius
-        sm: "8px",  // Small radius
+        lg: "12px", 
+        md: "10px", 
+        sm: "8px",  
       },
       colors: {
-        primary: "#213951", // Primary brand color (blue)
+        primary: "#213951", 
         secondary: "#e1e1e1", 
-        accent: "#26af70", // Accent color (green)
-        background: "#F9FAFB", // Light background
-        card: "#FFFFFF", // Card background
-        destructive: "#DC2626", // Destructive actions (red)
-        border: "#E5E7EB", // Border color
+        accent: "#1F8F5A", 
+        text: {
+          light: "#FFFFFF",
+          dark: "#EDEDED", 
+        },
+        background: "#F9FAFB", 
+        card: "#FFFFFF", 
+        destructive: "#DC2626", 
+        border: "#E5E7EB", 
       },
       keyframes: {
         "accordion-down": {
