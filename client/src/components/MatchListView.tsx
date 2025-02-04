@@ -3,6 +3,7 @@ import { useLoadMoreMatches, useTournamentStore } from "@/stores/tournaments";
 import SkeletonTable from "./ui/SkeletonTable";
 import { typeOfbets } from "@/utils/helpers";
 import BackToTopButton from "./ui/Button";
+import useScrollToTop from "@/hooks/useScrollToTop";
 
 const MatchTable = React.lazy(() => import("./MatchTable"));
 
@@ -13,6 +14,7 @@ const MatchListView = () => {
   const groupedMatches = getTimeAwareGroupedMatches();
   const observerRef = useRef<HTMLDivElement>(null);
   const setCache = useTournamentStore((state) => state.setCache);
+  const { showBackToTop, scrollToTop } = useScrollToTop();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -68,10 +70,15 @@ const MatchListView = () => {
         </section>
       ))}
       <div ref={observerRef} className="h-10 text-center">
-        {loading
-          ? "Loading more tournaments..."
-          : hasMore || <BackToTopButton />}
+        {loading ? "Loading more matches..." : ""}
       </div>
+
+      {showBackToTop && (
+        <BackToTopButton
+          onClick={scrollToTop}
+          className="fixed bottom-5 left-1/2 transform -translate-x-1/2"
+        />
+      )}
     </div>
   );
 };

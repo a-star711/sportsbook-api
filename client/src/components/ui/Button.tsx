@@ -19,7 +19,7 @@ const BackToTopButton = ({
   return (
     <button
       onClick={onClick || handleScrollToTop}
-      className={`px-4 py-2 bg-accent text-white rounded-md shadow-md hover:bg-blue-600 transition ${className}`}
+      className={`px-4 py-2 bg-accent text-white rounded-md shadow-md  hover:bg-orange-500 transition ${className}`}
     >
       {label}
     </button>

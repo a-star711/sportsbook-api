@@ -11,7 +11,7 @@ function Navbar() {
         <h4 className="text-white text-xl font-semibold">Esports</h4>
       </div>
       <button
-        className="ml-5 py-2 px-4 bg-accent text-white rounded-xl hover:bg-muted transition-colors"
+        className="ml-5 py-2 px-4 bg-accent text-text-light rounded-xl hover:bg-orange-500 transition-colors"
         onClick={toggleMode}
       >
         {mode === "LEAGUE" ? "Sort by Time" : "Sort by Game"}

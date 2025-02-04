@@ -14,6 +14,8 @@ const App = () => {
     fetchTournaments();
   }, []);
 
+  console.log("Hi");
+
   useEffect(() => {
     const modeFromPath =
       window.location.pathname === "/gameview" ? "LEAGUE" : "TIMELINE";

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useTournamentStore } from "../stores/tournaments";
 import GameAccordion from "./GameAccordion";
 import BackToTopButton from "./ui/Button";
+import useScrollToTop from "@/hooks/useScrollToTop";
 
 const GameList = () => {
   const {
@@ -17,6 +18,7 @@ const GameList = () => {
   );
 
   const observerRef = useRef<HTMLDivElement | null>(null);
+  const { showBackToTop, scrollToTop } = useScrollToTop();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -46,12 +48,16 @@ const GameList = () => {
           isInitiallyOpen={index < 2}
         />
       ))}
-
       <div ref={observerRef} className="h-10 text-center">
-        {loading
-          ? "Loading more tournaments..."
-          : hasMoreTournaments || <BackToTopButton />}
+        {loading ? "Loading more matches..." : ""}
       </div>
+
+      {showBackToTop && (
+        <BackToTopButton
+          onClick={scrollToTop}
+          className="fixed bottom-5 left-1/2 transform -translate-x-1/2"
+        />
+      )}
     </>
   );
 };
