@@ -53,7 +53,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
     try {
       const data = await fetchMatches();
       const tournaments = memoizedTransformMatches(data);
-
+      
       set({
         rawData: data,
         tournaments,

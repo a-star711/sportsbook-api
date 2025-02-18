@@ -1,16 +1,24 @@
 import { parseBool, splitEventName } from "@/utils/helpers";
 import { ApiResponse, ApiMatch, ApiBet, ApiOdd } from "../types";
 import { Bet, Event, Match } from "@/types/types";
+import isEqual from "lodash/isEqual";
 
 export const memoizedTransformMatches = (() => {
   let cache: { key: string; value: Event[] } | null = null;
 
   return (data: ApiResponse): Event[] => {
-    const dataKey = JSON.stringify(data.XmlSports.Sport.map((sport) => sport.$.Name));
     const dataXMLSport = data.XmlSports.Sport;
 
+    const dataKey = JSON.stringify(
+      dataXMLSport.flatMap((sport) =>
+        sport.Event.map((event) => ({
+          id: event.$.ID,
+          matchCount: event.Match.length,
+        }))
+      )
+    );
 
-    if (cache && cache.key === dataKey) {
+    if (cache && isEqual(JSON.parse(cache.key), JSON.parse(dataKey))) {
       return cache.value;
     }
 

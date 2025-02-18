@@ -1,8 +1,8 @@
-interface BackToTopButtonProps {
+type BackToTopButtonProps = {
   onClick?: () => void;
   label?: string;
   className?: string;
-}
+};
 
 const BackToTopButton = ({
   onClick,

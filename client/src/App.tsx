@@ -24,12 +24,12 @@ const App = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="app">
+    <main className="app">
       <Navbar />
       <div className="content-container">
         {mode === "LEAGUE" ? <GameList /> : <MatchListView />}
       </div>
-    </div>
+    </main>
   );
 };
 
